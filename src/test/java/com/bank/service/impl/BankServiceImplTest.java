@@ -16,41 +16,31 @@ class BankServiceImplTest {
         BankAccount bankAccount = getBankAccount();
 
         bankAccount.setBalance(500);
-        bankService.withdraw(bankAccount,200);
+        double balanceBefore = bankAccount.getBalance();
 
-        assertEquals(bankAccount.getBalance(), 300);
+        double withdrawAmount = 200;
+        bankService.withdraw(bankAccount, withdrawAmount);
 
-        //bankAccount.setPrevTrans(bankAccount.getPrevTrans());
+        assertEquals(bankAccount.getBalance(), balanceBefore - withdrawAmount);
 
-        //assertEquals(bankAccount.getBalance(),bankAccount.getBalance() - bankAccount.getPrevTrans());
-
-        //assertEquals(bankAccount.getBalance(), 300);
-
-
-        //assertEquals(bankAccount.getBalance(), (bankAccount.setPrevTrans(bankAccount.getBalance() - bankAccount.getPrevTrans()));
-
-
-        //assertEquals(bankAccount.getBalance(), bankAccount.setPrevTrans(bankAccount.getBalance() - bankAccount.getPrevTrans()));
-
-        //bankAccount.getPrevTrans();
-
-
-        //BankMenu bankMenu = new BankMenu(bankService, bankAccount);
-
+        assertEquals(bankAccount.getPrevTrans(), -withdrawAmount);
 
     }
 
 
     @Test
-    void withdrawShouldNotBeAccepted(){
+    void withdrawShouldNotBeAccepted() {
 
         BankServiceImpl bankService = new BankServiceImpl();
         BankAccount bankAccount = getBankAccount();
 
         bankAccount.setBalance(100);
-        bankService.withdraw(bankAccount,200);
+        double balanceBefore = bankAccount.getBalance();
 
-        assertFalse(bankAccount.getBalance()<bankAccount.getPrevTrans(), "Bank balance insufficient");
+        double withdrawAmount = 200;
+        bankService.withdraw(bankAccount, withdrawAmount);
+
+        assertEquals(bankAccount.getBalance(), balanceBefore, "Should not be any diff. in balance");
 
     }
 
@@ -60,9 +50,44 @@ class BankServiceImplTest {
         BankAccount bankAccount = getBankAccount();
 
         bankAccount.setBalance(400);
-        bankService.deposit(bankAccount,500);
+        double balanceBefore = bankAccount.getBalance();
 
-        assertEquals(bankAccount.getBalance(), 900);
+        double depositAmount = 500;
+        bankService.deposit(bankAccount, depositAmount);
 
+        assertEquals(bankAccount.getBalance(), balanceBefore + depositAmount);
+
+        assertEquals(bankAccount.getPrevTrans(), depositAmount);
+
+    }
+
+    @Test
+    void depositWithNegativeNumberShouldNotBeAcceptable() {
+
+        BankServiceImpl bankService = new BankServiceImpl();
+        BankAccount bankAccount = getBankAccount();
+
+        bankAccount.setBalance(400);
+        double balanceBefore = bankAccount.getBalance();
+
+        double depositAmount = -100;
+        bankService.deposit(bankAccount, depositAmount);
+
+        assertEquals(bankAccount.getBalance(), balanceBefore, "Should not be any diff. in balance");
+
+    }
+
+    @Test
+    void depositWithZeroShouldNotBeAcceptable() {
+        BankServiceImpl bankService = new BankServiceImpl();
+        BankAccount bankAccount = getBankAccount();
+
+        bankAccount.setBalance(400);
+        double balanceBefore = bankAccount.getBalance();
+
+        double withdrawWithZero = 0;
+        bankService.deposit(bankAccount, withdrawWithZero);
+
+        assertEquals(bankAccount.getBalance(), balanceBefore, "Should not be any diff. in balance");
     }
 }

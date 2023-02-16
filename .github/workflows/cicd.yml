@@ -7,3 +7,26 @@ on:
     branches: [ main ]
   schedule:
     - cron: '*/5 * */1 * *'
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout latest main
+      uses: actions/checkout@v3
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: '19'
+        distribution: 'oracle'
+        cache: maven
+    - name: Run app
+      run: mvn clean install
+    - name: build and package
+      run: mvn package
+    - name: Upload jar file
+      uses: actions/upload-artifacts@v3
+      with:
+        name: BankSystem.jar
+        path: target/bank-system-1.0.jar
